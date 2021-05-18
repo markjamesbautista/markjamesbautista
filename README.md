@@ -1,5 +1,5 @@
 - 👋 Hi, I’m @markjamesbautista
-- 👀 I’m interested in ...
+- 👀 I’m interested in different language that can create android application
 - 🌱 I’m currently learning kotlin programming language
 - 💞️ I’m looking to collaborate on android projects
 - 📫 How to reach me (mjbautista563@gmail.com)
