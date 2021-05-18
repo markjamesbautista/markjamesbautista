@@ -1,8 +1,10 @@
 package com.example.testfields;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -11,7 +13,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 
 import java.util.Calendar;
 import java.util.regex.Matcher;
@@ -23,8 +31,9 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private DatePickerDialog datepicker;
-    private MainActivity binding;
 
+    private String message = "";
+    private String testAPI = "https://run.mocky.io/v3/c7b8cbb4-0a6a-4b56-b41c-e8603d10e308";
 
 
     @BindView(R.id.fNameTXT)            EditText fNameTXT;
@@ -46,6 +55,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void onViewReady() {
         submitBTN.setOnClickListener(this);
         birthdayTXT.setOnClickListener(this);
+        testAPI();
+
+
+    }
+
+    private void testAPI(){
+
+        Ion.with(this)
+                .load(testAPI)
+                .setLogging("ION API", Log.ERROR)
+                .setTimeout(10000)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        Log.e("API", "Exception " + e + "\nresult: " + result);
+                        message = new Gson().toJson(result);
+
+                    }
+                });
+
+        new AlertDialog.Builder(getBaseContext())
+                .setTitle("Test API")
+                .setMessage(message.trim())
+
+                // Specifying a listener allows you to take an action before dismissing the dialog.
+                // The dialog is automatically dismissed when a dialog button is clicked.
+                .setPositiveButton(android.R.string.yes,null)
+
+                // A null listener allows the button to dismiss the dialog and take no further action.
+//                .setNegativeButton(android.R.string.no, null)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
 
     }
 
@@ -112,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()){
             case R.id.submitBTN:
                 onSubmitClick();
+                testAPI();
                 break;
             case R.id.birthdayTXT:
                 openDatePicker();
