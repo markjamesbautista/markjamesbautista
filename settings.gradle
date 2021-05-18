@@ -1,0 +1,2 @@
+rootProject.name = "TestFields"
+include ':app'
